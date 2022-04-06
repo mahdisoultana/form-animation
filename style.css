@@ -9,3 +9,16 @@ svg {
 p {
   transform-origin: left center;
 }
+
+button {
+  opacity: 1;
+  color: white !important;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+label p {
+  pointer-events: none;
+}

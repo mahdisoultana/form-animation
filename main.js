@@ -1,7 +1,8 @@
 import "./style.css";
 
 const inputsLabel = [...document.querySelectorAll(".input")];
-
+const textEnd = document.querySelector(".text-end span");
+const button = document.querySelector("form button");
 // checkbox
 const checkboxLabel = document.querySelector(".checkbox-container");
 const checkboxText = checkboxLabel.querySelector(".checkbox-container p");
@@ -12,7 +13,7 @@ const checkboxPath = checkboxContainer.querySelector(
   ".checkbox-container span svg path",
 );
 // console.log({ checkboxContainer, checkboxLabel, checkboxPath, checkboxText });
-
+let formValues = {};
 const lineElastic =
   "M1 0.999512C1 0.999512 61.5 7.5 151 7.5C240.5 7.5 301 0.999512 301 0.999512";
 const lineStrait =
@@ -58,6 +59,14 @@ inputsLabel.forEach((label) => {
     }
   });
   input.addEventListener("keyup", (e) => {
+    formValues = { ...formValues, [e.target.name]: e.target.value };
+
+    if (formValues.name && formValues.email && formValues.tel) {
+      button.style.opacity = "1";
+      button.disabled = false;
+    } else {
+      button.disabled = true;
+    }
     if (input.type == "text") {
       ColorizeInput(line, p, e.target.value.length < 5);
     }
@@ -72,7 +81,7 @@ inputsLabel.forEach((label) => {
 
 function colorize(line, p, color) {
   if (color == "#F75047") {
-    gsap.to([p, line], {
+    gsap.to([p, line, button], {
       color,
       stroke: color,
       x: 1,
@@ -80,7 +89,7 @@ function colorize(line, p, color) {
       ease: "elastic.out(4,.3)",
     });
   } else {
-    gsap.to([p, line], {
+    gsap.to([p, line, button], {
       x: 0,
       ease: "power#.out",
       color,
@@ -183,6 +192,7 @@ tlCharacter
 const form = document.querySelector("form");
 const sections = document.querySelectorAll("section");
 const tl3 = gsap.timeline({ defauls: { duration: 1.4, ease: "power3,out" } });
+gsap.fromTo(form, { opacity: 0 }, { duration: 1, opacity: 1 });
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const {
@@ -192,11 +202,20 @@ form.addEventListener("submit", (e) => {
     agree: { checked: agreeValue },
   } = e.target;
 
+  textEnd.textContent = emailValue;
   tl3.to(sections, { opacity: 0, y: 60 });
   tl3.to(form, { scale: 0.8, ease: "back.out(3)", duration: 1.4 });
+
   tl3.fromTo(
     ".text-end",
     { opacity: 0, y: 30 },
     { scale: 1, opacity: 1, y: -110, duration: 1.4 },
   );
+  tl3.to(character, {
+    y: -14,
+
+    ease: "elastic.out(3,.3)",
+    repeat: 1,
+    duration: 1.5,
+  });
 });
